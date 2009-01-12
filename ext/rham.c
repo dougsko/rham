@@ -10,21 +10,21 @@ static void rig_free(RIG *my_rig){
 	rig_cleanup(my_rig);	
 }
 
-static VALUE rig_allocate(VALUE klass){
+static VALUE rig_allocate(VALUE self){
 	RIG *my_rig;
-	//rig_model_t my_model = RIG_MODEL_DUMMY; //RIG_MODEL_FT847;
-	rig_model_t my_model = RIG_MODEL_FT847;	
+	rig_model_t my_model = RIG_MODEL_DUMMY;
+	//rig_model_t my_model = RIG_MODEL_FT847;	
 
 	my_rig = rig_init(my_model);
-	return Data_Wrap_Struct(klass, rig_mark, rig_free, my_rig);
+	return Data_Wrap_Struct(self, rig_mark, rig_free, my_rig);
 }
 
 static VALUE rb_rig_open(VALUE self){
 	RIG *my_rig;
-	char *serial = "/dev/ttyS0"
+	//char *serial = "/dev/ttyS0";
 
 	Data_Get_Struct(self, RIG, my_rig);
-	strncpy(my_rig->state.rigport.pathname, rig_file, 100);
+	//strncpy(my_rig->state.rigport.pathname, serial, 100);
 	
 
 	return INT2NUM(rig_open(my_rig));
@@ -49,7 +49,23 @@ static VALUE rb_rig_get_freq(VALUE self){
 	freq_t *freq;
 
 	Data_Get_Struct(self, RIG, my_rig);
-	return INT2NUM(rig_get_freq(my_rig, VFO_CURR, freq));
+	return INT2NUM(rig_get_freq(my_rig, RIG_VFO_MAIN, freq));
+}
+
+static VALUE rb_rig_get_vfo(VALUE self){
+	RIG *my_rig;
+	vfo_t *vfo;
+
+	Data_Get_Struct(self, RIG, my_rig);
+	return INT2NUM(rig_get_vfo(my_rig, vfo));
+}
+
+static VALUE rb_rig_get_powerstat(VALUE self){
+	RIG *my_rig;
+	powerstat_t *status;
+
+	Data_Get_Struct(self, RIG, my_rig);
+	return INT2NUM(rig_get_powerstat(my_rig, status));
 }
 
 /*
@@ -73,6 +89,8 @@ void Init_rham() {
 	rb_define_method(rb_cRham, "rig_close", rb_rig_close, 0);
 	rb_define_method(rb_cRham, "rig_get_info", rb_rig_get_info, 0);
 	rb_define_method(rb_cRham, "rig_get_freq", rb_rig_get_freq, 0);
+	rb_define_method(rb_cRham, "rig_get_vfo", rb_rig_get_vfo, 0);
+	rb_define_method(rb_cRham, "rig_get_powerstat", rb_rig_get_powerstat, 0);
 	//rb_define_method(rb_cSpike, "set_spike", rb_set_spike, 0);
 	//rb_define_method(rb_cSpike, "init_fuzz", rb_init_fuzzing, 0);
 	//rb_define_method(rb_cSpike, "cstring", rb_cstring, 1);
