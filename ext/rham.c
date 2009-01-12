@@ -12,8 +12,9 @@ static void rig_free(RIG *my_rig){
 
 static VALUE rig_allocate(VALUE klass){
 	RIG *my_rig;
-	rig_model_t my_model = RIG_MODEL_DUMMY; //RIG_MODEL_FT847;
-	
+	//rig_model_t my_model = RIG_MODEL_DUMMY; //RIG_MODEL_FT847;
+	rig_model_t my_model = RIG_MODEL_FT847;	
+
 	my_rig = rig_init(my_model);
 	return Data_Wrap_Struct(klass, rig_mark, rig_free, my_rig);
 }
@@ -48,7 +49,7 @@ static VALUE rb_rig_get_freq(VALUE self){
 	freq_t *freq;
 
 	Data_Get_Struct(self, RIG, my_rig);
-	return INT2NUM(rig_get_freq(my_rig, RIG_VFO_CURR, freq));
+	return INT2NUM(rig_get_freq(my_rig, VFO_CURR, freq));
 }
 
 /*
