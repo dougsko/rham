@@ -1,3 +1,0 @@
-termios.lo termios.o: termios.c ../include/config.h
-
-../include/config.h:

@@ -1,3 +1,0 @@
-usrp.lo usrp.o: usrp.c ../include/config.h
-
-../include/config.h:

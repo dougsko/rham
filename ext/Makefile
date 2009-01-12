@@ -41,7 +41,7 @@ LIBRUBYARG_SHARED = -l$(RUBY_SO_NAME)
 LIBRUBYARG_STATIC = -l$(RUBY_SO_NAME)-static
 
 RUBY_EXTCONF_H = 
-CFLAGS   =  -fPIC -Wall -I./hamlib-1.2.8/include -I/mnt/sdb/bin/ruby-ham/ext/hamlib-1.2.8/src -L/usr/local/lib 
+CFLAGS   =  -fPIC -Wall -I/usr/local/include/hamlib 
 INCFLAGS = -I. -I. -I/usr/lib/ruby/1.8/i486-linux -I.
 CPPFLAGS =  
 CXXFLAGS = $(CFLAGS) 
@@ -79,7 +79,7 @@ extout =
 extout_prefix = 
 target_prefix = 
 LOCAL_LIBS = 
-LIBS = $(LIBRUBYARG_SHARED)  -lpthread -ldl -lcrypt -lm   -lc
+LIBS = $(LIBRUBYARG_SHARED) -lhamlib  -lpthread -ldl -lcrypt -lm   -lc
 SRCS = rham.c
 OBJS = rham.o
 TARGET = rham
