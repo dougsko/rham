@@ -49,7 +49,7 @@ static VALUE rb_rig_get_freq(VALUE self){
 	freq_t *freq;
 
 	Data_Get_Struct(self, RIG, my_rig);
-	return INT2NUM(rig_get_freq(my_rig, RIG_VFO_MAIN, freq));
+	return INT2NUM(rig_get_freq(my_rig, RIG_VFO_CURR, &freq));
 }
 
 static VALUE rb_rig_get_vfo(VALUE self){
@@ -57,7 +57,7 @@ static VALUE rb_rig_get_vfo(VALUE self){
 	vfo_t *vfo;
 
 	Data_Get_Struct(self, RIG, my_rig);
-	return INT2NUM(rig_get_vfo(my_rig, vfo));
+	return INT2NUM(rig_get_vfo(my_rig, &vfo));
 }
 
 static VALUE rb_rig_get_powerstat(VALUE self){
@@ -65,7 +65,7 @@ static VALUE rb_rig_get_powerstat(VALUE self){
 	powerstat_t *status;
 
 	Data_Get_Struct(self, RIG, my_rig);
-	return INT2NUM(rig_get_powerstat(my_rig, status));
+	return INT2NUM(rig_get_powerstat(my_rig, &status));
 }
 
 /*
