@@ -105,7 +105,19 @@ static VALUE rb_rig_get_powerstat(VALUE self){
 		return Qnil;
 }
 
-
+static VALUE rb_rig_set_freq(VALUE self, VALUE rfreq){
+	int ret;
+	freq_t freq;
+	RIG *my_rig;
+	
+	freq = NUM2LONG(rfreq);
+	Data_Get_Struct(self, RIG, my_rig);
+	ret = rig_set_freq(my_rig, RIG_VFO_CURR, freq);
+	if(ret != RIG_OK)
+		printf("rig_set_freq: error = %s\n", rigerror(ret));
+	
+	return Qnil;
+}	
 void Init_rham() {
 	rb_cRham = rb_define_class("Rham", rb_cObject);
 	rb_define_alloc_func(rb_cRham, rig_allocate);
@@ -115,6 +127,7 @@ void Init_rham() {
 	rb_define_method(rb_cRham, "rig_get_freq", rb_rig_get_freq, 0);
 	rb_define_method(rb_cRham, "rig_get_vfo", rb_rig_get_vfo, 0);
 	rb_define_method(rb_cRham, "rig_get_powerstat", rb_rig_get_powerstat, 0);
+	rb_define_method(rb_cRham, "rig_set_freq", rb_rig_set_freq, 1);
 	//rb_define_method(rb_cSpike, "set_spike", rb_set_spike, 0);
 	//rb_define_method(rb_cSpike, "init_fuzz", rb_init_fuzzing, 0);
 	//rb_define_method(rb_cSpike, "cstring", rb_cstring, 1);
