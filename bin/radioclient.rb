@@ -4,7 +4,7 @@
 require 'lib/rham'
 require 'drb'
 
-DRb.start_service
+#DRb.start_service
 a = DRbObject.new nil, ARGV.shift
 a.rig_open
 
