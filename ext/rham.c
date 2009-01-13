@@ -1,4 +1,5 @@
 #include "ruby.h"
+#include <stdio.h>
 #include <hamlib/rig.h>
 
 static VALUE rb_cRham;
@@ -16,40 +17,64 @@ static VALUE rig_allocate(VALUE self){
 	//rig_model_t my_model = RIG_MODEL_FT847;	
 
 	my_rig = rig_init(my_model);
+	if (!my_rig) 
+		fprintf(stderr,"Unknown rig num: %d\n", my_model);
+
 	return Data_Wrap_Struct(self, rig_mark, rig_free, my_rig);
 }
 
 static VALUE rb_rig_open(VALUE self){
 	RIG *my_rig;
-	//char *serial = "/dev/ttyS0";
+	int ret;
 
 	Data_Get_Struct(self, RIG, my_rig);
-	//strncpy(my_rig->state.rigport.pathname, serial, 100);
 	
-
-	return INT2NUM(rig_open(my_rig));
+	if((ret = rig_open(my_rig)) != RIG_OK)
+		 printf("rig_open: error = %s\n", rigerror(ret));
+	else
+		return Qnil;
 }
 
 static VALUE rb_rig_close(VALUE self){
 	RIG *my_rig;
+	int ret;
 
 	Data_Get_Struct(self, RIG, my_rig);
-	return INT2NUM(rig_close(my_rig));
+
+	if((ret = rig_close(my_rig)) != RIG_OK)
+		printf("rig_open: error = %s\n", rigerror(ret));
+	else
+		return Qnil;	
 }
 
 static VALUE rb_rig_get_info(VALUE self){
 	RIG *my_rig;
+	const char *info;
 
 	Data_Get_Struct(self, RIG, my_rig);
-	return rb_str_new2(rig_get_info(my_rig));
+
+	info = rig_get_info(my_rig);
+	if(!info)
+		return Qnil;
+	return rb_str_new2(info);
 }
 
 static VALUE rb_rig_get_freq(VALUE self){
 	RIG *my_rig;
-	freq_t *freq;
+	freq_t freq;
+	int ret;
+	char result[100];
 
 	Data_Get_Struct(self, RIG, my_rig);
-	return INT2NUM(rig_get_freq(my_rig, RIG_VFO_CURR, &freq));
+	ret = rig_get_freq(my_rig, RIG_VFO_CURR, &freq);
+
+	if(ret != RIG_OK)
+		printf("rig_open: error = %s\n", rigerror(ret));
+	else{
+		sprintf(result, "%f", freq);	
+		return rb_str_new2(result);
+	}
+	return Qnil;
 }
 
 static VALUE rb_rig_get_vfo(VALUE self){
@@ -63,24 +88,23 @@ static VALUE rb_rig_get_vfo(VALUE self){
 static VALUE rb_rig_get_powerstat(VALUE self){
 	RIG *my_rig;
 	powerstat_t *status;
+	int ret;
 
 	Data_Get_Struct(self, RIG, my_rig);
-	return INT2NUM(rig_get_powerstat(my_rig, &status));
+	ret = rig_get_powerstat(my_rig, &status);	
+
+	if(ret != RIG_OK){
+		printf("rig_get_powerstat: error = %s\n", rigerror(ret));
+		return Qnil;
+	}
+	if(status == RIG_POWER_OFF)
+		return rb_str_new2("off");
+	else if(status == RIG_POWER_ON)
+		return rb_str_new2("on");
+	else
+		return Qnil;
 }
 
-/*
-static VALUE rb_set_spike(VALUE self){
-	struct spike *s;
-
-	Data_Get_Struct(self, struct spike, s);
-	return INT2NUM(setspike(s));
-}
-
-static VALUE rb_init_fuzzing(VALUE self){
-	s_init_fuzzing();
-	return Qnil;
-}
-*/
 
 void Init_rham() {
 	rb_cRham = rb_define_class("Rham", rb_cObject);
