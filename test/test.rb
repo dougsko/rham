@@ -2,7 +2,6 @@
 #
 #
 require 'lib/rham'
-require 'ext/rham'
 
 a = Rham.new
 a.rig_open

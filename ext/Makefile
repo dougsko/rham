@@ -41,7 +41,7 @@ LIBRUBYARG_SHARED = -l$(RUBY_SO_NAME)
 LIBRUBYARG_STATIC = -l$(RUBY_SO_NAME)-static
 
 RUBY_EXTCONF_H = 
-CFLAGS   =  -fPIC -Wall -I/usr/local/include/hamlib 
+CFLAGS   =  -fPIC -Wall 
 INCFLAGS = -I. -I. -I/usr/lib/ruby/1.8/i486-linux -I.
 CPPFLAGS =  
 CXXFLAGS = $(CFLAGS) 

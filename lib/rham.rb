@@ -3,7 +3,11 @@
 #
 # Ruby methods for the Rham class
 #
+require 'ext/rham'
+
 class Rham
+	Rham::VERSION = "0.0.1"
+	
 	def stats
 		stats = {}
 		stats["freq"] = rig_get_freq

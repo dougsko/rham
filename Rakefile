@@ -5,11 +5,11 @@ require 'rake/testtask'
 require 'rake/gempackagetask'
 
 # Define global vars
-PROJECT = "Ruby-ham"
+PROJECT = "Rham"
 MY_NAME = "Doug Prostko"
 MY_EMAIL = "dougtko@gmail.com"
-PROJECT_SUMMARY = "SUMMARY"
-UNIX_NAME = "ruby-ham"
+PROJECT_SUMMARY = "libham wrapper"
+UNIX_NAME = "rham"
 WEBSITE_DIR = "."
 RDOC_HTML_DIR = "#{WEBSITE_DIR}/rdoc"
 DEPS = ""
@@ -42,9 +42,10 @@ BIN_FILES = FileList["**/*.rb"]
 
 # This filelist is used to create source packages.
 # Include all Ruby and RDoc files.
-DIST_FILES = FileList["paster.rb", "**/*.rdoc", "README", "LICENSE"]
+DIST_FILES = FileList["**/*.rdoc", "README", "LICENSE"]
 DIST_FILES.include("Rakefile")
 DIST_FILES.include(BIN_FILES)
+DIST_FILES.include("ext/*.so", "lib/*.rb", "lib/*.so")
 
 # Run the tests if rake is invoked without arguments.
 task "default" => ["test"]
