@@ -16,6 +16,7 @@ static VALUE rig_allocate(VALUE self){
 	rig_model_t my_model = RIG_MODEL_DUMMY;
 	//rig_model_t my_model = RIG_MODEL_FT847;	
 
+	rig_set_debug(RIG_DEBUG_NONE);
 	my_rig = rig_init(my_model);
 	if (!my_rig) 
 		fprintf(stderr,"Unknown rig num: %d\n", my_model);
@@ -118,6 +119,67 @@ static VALUE rb_rig_set_freq(VALUE self, VALUE rfreq){
 	
 	return Qnil;
 }	
+
+static VALUE rb_rig_get_strength(VALUE self){
+	int ret;
+	int strength;
+	RIG *my_rig;
+
+	Data_Get_Struct(self, RIG, my_rig);
+	ret = rig_get_strength(my_rig, RIG_VFO_CURR, &strength);
+	if(ret != RIG_OK)
+		printf("rig_get_strength: error = %s\n", rigerror(ret));
+	else
+		return INT2NUM(strength);
+
+	return Qnil;
+}
+
+static VALUE rb_rig_get_mode(VALUE self){
+	int ret;
+	rmode_t mode;
+	pbwidth_t width;
+	RIG *my_rig;
+
+	Data_Get_Struct(self, RIG, my_rig);
+	ret = rig_get_mode(my_rig, RIG_VFO_CURR, &mode, &width);
+	
+	if(ret != RIG_OK)
+		printf("rig_get_mode: error = %s\n", rigerror(ret));
+	else
+		return rb_str_new2(rig_strrmode(mode));
+
+	return Qnil;
+}
+
+static VALUE rb_rig_set_mode(VALUE self, VALUE rmode, VALUE rwidth){
+	int ret;
+	rmode_t mode;
+	pbwidth_t width;
+	RIG *my_rig;
+	char *tmp_width;
+
+	Data_Get_Struct(self, RIG, my_rig);
+
+	mode = rig_parse_mode(STR2CSTR(rmode));
+
+	tmp_width = STR2CSTR(rwidth);
+	if(strcmp(tmp_width, "normal") == 0)
+		width = rig_passband_normal(my_rig, mode);
+	else if(strcmp(tmp_width, "narrow") == 0)
+		width = rig_passband_narrow(my_rig, mode);
+	else if(strcmp(tmp_width, "wide") == 0)
+		width = rig_passband_wide(my_rig, mode);
+	else
+		printf("rig_set_mode: error = Invalid width");		
+
+	ret = rig_set_mode(my_rig, RIG_VFO_CURR, mode, width);
+        if(ret != RIG_OK)
+                printf("rig_set_mode: error = %s\n", rigerror(ret));
+
+        return Qnil;
+}	
+
 void Init_rham() {
 	rb_cRham = rb_define_class("Rham", rb_cObject);
 	rb_define_alloc_func(rb_cRham, rig_allocate);
@@ -128,8 +190,7 @@ void Init_rham() {
 	rb_define_method(rb_cRham, "rig_get_vfo", rb_rig_get_vfo, 0);
 	rb_define_method(rb_cRham, "rig_get_powerstat", rb_rig_get_powerstat, 0);
 	rb_define_method(rb_cRham, "rig_set_freq", rb_rig_set_freq, 1);
-	//rb_define_method(rb_cSpike, "set_spike", rb_set_spike, 0);
-	//rb_define_method(rb_cSpike, "init_fuzz", rb_init_fuzzing, 0);
-	//rb_define_method(rb_cSpike, "cstring", rb_cstring, 1);
-	//rb_define_method(rb_cSpike, "unistring", rb_unistring, 1);
+	rb_define_method(rb_cRham, "rig_get_strength", rb_rig_get_strength, 0);
+	rb_define_method(rb_cRham, "rig_get_mode", rb_rig_get_mode, 0);
+	rb_define_method(rb_cRham, "rig_set_mode", rb_rig_set_mode, 2);
 }
