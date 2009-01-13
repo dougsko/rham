@@ -157,18 +157,18 @@ static VALUE rb_rig_set_mode(VALUE self, VALUE rmode, VALUE rwidth){
 	rmode_t mode;
 	pbwidth_t width;
 	RIG *my_rig;
-	char *tmp_width;
+	char *s_width;
 
 	Data_Get_Struct(self, RIG, my_rig);
 
 	mode = rig_parse_mode(STR2CSTR(rmode));
 
-	tmp_width = STR2CSTR(rwidth);
-	if(strcmp(tmp_width, "normal") == 0)
+	s_width = STR2CSTR(rwidth);
+	if(strcmp(s_width, "normal") == 0)
 		width = rig_passband_normal(my_rig, mode);
-	else if(strcmp(tmp_width, "narrow") == 0)
+	else if(strcmp(s_width, "narrow") == 0)
 		width = rig_passband_narrow(my_rig, mode);
-	else if(strcmp(tmp_width, "wide") == 0)
+	else if(strcmp(s_width, "wide") == 0)
 		width = rig_passband_wide(my_rig, mode);
 	else
 		printf("rig_set_mode: error = Invalid width");		

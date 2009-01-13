@@ -10,6 +10,7 @@ class Rham
 	
 	def stats
 		stats = {}
+		stats["info"] = rig_get_info
 		stats["freq"] = rig_get_freq
 		stats["strength"] = rig_get_strength
 		stats["mode"] = rig_get_mode
