@@ -1,0 +1,69 @@
+<% require 'rubygems' %>		
+<% require 'cgi' %>
+<% require 'drb' %>
+
+<% radio = DRbObject.new(nil, "druby://slackernet.ath.cx:7176") %>
+<% radio.rig_open %>
+
+<head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+       "http://www.w3.org/TR/html4/loose.dtd">         
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link href="default.css" rel="stylesheet" type="text/css" />
+		<title>Online Ham Radio</title>
+	</head>
+<body>
+
+<div id="sidebar">
+	<h1>Yaesu FT847</h1>
+</div>
+
+<div id="navigation">
+</div>
+
+<div id="content">
+<%      cgi = CGI.new()
+        if cgi.params['mode'] != "none"
+		radio.rig_set_mode(cgi.params['mode'].to_s, "normal")
+	end
+	if cgi.params['freq'][0].chomp.length > 0
+		radio.rig_set_freq(cgi.params['freq'][0].to_i)
+	end
+%>
+<img src="ft847.jpg">
+<br />
+<h2>Current Settings:</h2>
+<br />
+<% stats = radio.stats %>
+<strong>Mode: </strong> <%= stats["mode"] %>
+<br />
+<% puts "Frequency: " + stats["freq"] %>
+<br />
+<br />
+<form method="POST" action="radio.rhtml">
+	Mode Select:
+	<select name="mode">
+		<option value="none">No change</option>
+		<option value=AM>AM</option>
+		<option value=CW>CW</option>
+		<option value=FM>FM</option>
+		<option value=LSB>LSB</option>
+		<option value=USB>USB</option>
+	</select>
+	<br />
+	Set Frequency (Hz):
+	<input type="text" name="freq">
+	<br>
+	<input type="submit" value="Submit">
+</form>
+<h3><a href="http://igotinternets.net:8000/example1.ogg.m3u">Listen</a></h3>
+</div>
+
+<div id="footer">
+</div>
+
+</body>
+</html>
+<% radio.rig_close %>
