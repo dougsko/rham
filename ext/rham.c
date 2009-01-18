@@ -180,6 +180,19 @@ static VALUE rb_rig_set_mode(VALUE self, VALUE rmode, VALUE rwidth){
         return Qnil;
 }	
 
+VALUE rb_rig_get_smeter(VALUE self){
+	RIG *my_rig;
+	int strength;
+	int ret;
+
+	Data_Get_Struct(self, RIG, my_rig);
+	ret = rig_get_level(my_rig, RIG_VFO_CURR, RIG_LEVEL_STRENGTH, &strength);	
+	if(ret != RIG_OK)
+		printf("rig_get_smeter: error = %s\n", rigerror(ret));
+
+	return INT2NUM(strength);
+}
+
 void Init_rham() {
 	rb_cRham = rb_define_class("Rham", rb_cObject);
 	rb_define_alloc_func(rb_cRham, rig_allocate);
@@ -193,4 +206,5 @@ void Init_rham() {
 	rb_define_method(rb_cRham, "rig_get_strength", rb_rig_get_strength, 0);
 	rb_define_method(rb_cRham, "rig_get_mode", rb_rig_get_mode, 0);
 	rb_define_method(rb_cRham, "rig_set_mode", rb_rig_set_mode, 2);
+	rb_define_method(rb_cRham, "rig_get_smeter", rb_rig_get_smeter, 0);
 }
