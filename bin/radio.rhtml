@@ -28,8 +28,10 @@
         if cgi.params['mode'] != "none"
 		radio.rig_set_mode(cgi.params['mode'].to_s, "normal")
 	end
-	if cgi.params['freq'][0].chomp.length > 0
-		radio.rig_set_freq(cgi.params['freq'][0].to_i)
+	if cgi.params['freq'][0] != nil
+		if cgi.params['freq'][0].length > 0
+			radio.rig_set_freq(cgi.params['freq'][0].to_i)
+		end
 	end
 %>
 <img src="ft847.jpg">
