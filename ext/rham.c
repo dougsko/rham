@@ -186,7 +186,7 @@ VALUE rb_rig_get_smeter(VALUE self){
 	int ret;
 
 	Data_Get_Struct(self, RIG, my_rig);
-	ret = rig_get_level(my_rig, RIG_VFO_CURR, RIG_LEVEL_STRENGTH, &strength);	
+	ret = rig_get_level(my_rig, RIG_VFO_CURR, RIG_LEVEL_METER, &strength);	
 	if(ret != RIG_OK)
 		printf("rig_get_smeter: error = %s\n", rigerror(ret));
 
