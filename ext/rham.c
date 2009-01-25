@@ -13,8 +13,8 @@ static void rig_free(RIG *my_rig){
 
 static VALUE rig_allocate(VALUE self){
 	RIG *my_rig;
-	rig_model_t my_model = RIG_MODEL_DUMMY;
-	//rig_model_t my_model = RIG_MODEL_FT847;	
+	//rig_model_t my_model = RIG_MODEL_DUMMY;
+	rig_model_t my_model = RIG_MODEL_FT847;	
 
 	rig_set_debug(RIG_DEBUG_NONE);
 	my_rig = rig_init(my_model);
@@ -183,6 +183,7 @@ static VALUE rb_rig_set_mode(VALUE self, VALUE rmode, VALUE rwidth){
 void Init_rham() {
 	rb_cRham = rb_define_class("Rham", rb_cObject);
 	rb_define_alloc_func(rb_cRham, rig_allocate);
+	//rb_define_method(rb_cRham, "new", rb_new, 1);
 	rb_define_method(rb_cRham, "rig_open", rb_rig_open, 0);
 	rb_define_method(rb_cRham, "rig_close", rb_rig_close, 0);
 	rb_define_method(rb_cRham, "rig_get_info", rb_rig_get_info, 0);

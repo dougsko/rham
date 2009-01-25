@@ -3,7 +3,7 @@
 #
 require 'lib/rham'
 
-a = Rham.new
+a = Rham.new()
 a.rig_open
 
 a.rig_set_mode("AM", "normal")
