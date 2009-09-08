@@ -13,8 +13,20 @@ static void rig_free(RIG *my_rig){
 
 static VALUE rig_allocate(VALUE self){
 	RIG *my_rig;
-	//rig_model_t my_model = RIG_MODEL_DUMMY;
-	rig_model_t my_model = RIG_MODEL_FT847;	
+	rig_model_t my_model;
+    char *model;
+
+    if(model = STR2CSTR(rb_gv_get("$model"))){
+        if(model == "ft847"){
+            my_model = RIG_MODEL_FT847;
+        }
+        else{
+            my_model = RIG_MODEL_DUMMY;
+        }
+    }
+    else{
+        fprintf(stderr,"You must define the global variable, $model, somewhere in your script");
+    }
 
 	rig_set_debug(RIG_DEBUG_NONE);
 	my_rig = rig_init(my_model);
@@ -29,7 +41,7 @@ static VALUE rb_rig_open(VALUE self){
 	int ret;
 
 	Data_Get_Struct(self, RIG, my_rig);
-	
+
 	if((ret = rig_open(my_rig)) != RIG_OK)
 		 printf("rig_open: error = %s\n", rigerror(ret));
 	else
@@ -43,7 +55,7 @@ static VALUE rb_rig_close(VALUE self){
 	Data_Get_Struct(self, RIG, my_rig);
 
 	if((ret = rig_close(my_rig)) != RIG_OK)
-		printf("rig_open: error = %s\n", rigerror(ret));
+		printf("rig_close: error = %s\n", rigerror(ret));
 	else
 		return Qnil;	
 }
