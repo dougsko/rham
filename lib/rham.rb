@@ -3,7 +3,7 @@
 #
 # Ruby methods for the Rham class
 #
-require 'ext/rham'
+require 'rham.so'
 
 class Rham
 	def stats

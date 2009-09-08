@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 #
 #
-require 'lib/rham'
+
 require 'drb'
+
+$model = "dummy"
 
 #DRb.start_service
 a = DRbObject.new nil, ARGV.shift
