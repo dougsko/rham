@@ -36,6 +36,10 @@ static VALUE rig_allocate(VALUE self){
 	return Data_Wrap_Struct(self, rig_mark, rig_free, my_rig);
 }
 
+/* Open a connection to a rig.
+ * 
+ *   rig.rig_open
+ */
 static VALUE rb_rig_open(VALUE self){
 	RIG *my_rig;
 	int ret;
@@ -48,6 +52,7 @@ static VALUE rb_rig_open(VALUE self){
 		return Qnil;
 }
 
+/* Close the connection to a rig. */
 static VALUE rb_rig_close(VALUE self){
 	RIG *my_rig;
 	int ret;
@@ -60,6 +65,7 @@ static VALUE rb_rig_close(VALUE self){
 		return Qnil;	
 }
 
+/* Returns information about the rig. */
 static VALUE rb_rig_get_info(VALUE self){
 	RIG *my_rig;
 	const char *info;
@@ -72,6 +78,10 @@ static VALUE rb_rig_get_info(VALUE self){
 	return rb_str_new2(info);
 }
 
+/* Returns the frequency the rig is tuned to.
+ *
+ *   rig.rig_get_freq    #=> "20000.000000"
+ */
 static VALUE rb_rig_get_freq(VALUE self){
 	RIG *my_rig;
 	freq_t freq;
@@ -90,6 +100,10 @@ static VALUE rb_rig_get_freq(VALUE self){
 	return Qnil;
 }
 
+/* Returns the VFO the rig is set to.
+ *
+ *   rig.rig_get_vfo    #=> 0
+ */
 static VALUE rb_rig_get_vfo(VALUE self){
 	RIG *my_rig;
 	vfo_t *vfo;
@@ -98,6 +112,10 @@ static VALUE rb_rig_get_vfo(VALUE self){
 	return INT2NUM(rig_get_vfo(my_rig, &vfo));
 }
 
+/* Lets you know whether the rig is turned on or off.
+ *
+ *   rig.rig_get_powerstat    #=> "on"
+ */
 static VALUE rb_rig_get_powerstat(VALUE self){
 	RIG *my_rig;
 	powerstat_t *status;
@@ -118,6 +136,10 @@ static VALUE rb_rig_get_powerstat(VALUE self){
 		return Qnil;
 }
 
+/* Sets the frequency of the rig.
+ *
+ *   rig.rig_set_freq(20000)    #=> nil
+ */
 static VALUE rb_rig_set_freq(VALUE self, VALUE rfreq){
 	int ret;
 	freq_t freq;
@@ -132,6 +154,10 @@ static VALUE rb_rig_set_freq(VALUE self, VALUE rfreq){
 	return Qnil;
 }	
 
+/* Returns the strength of the signal.
+ *
+ *   rig.rig_get_strength    #=> 0
+ */
 static VALUE rb_rig_get_strength(VALUE self){
 	int ret;
 	int strength;
@@ -147,6 +173,10 @@ static VALUE rb_rig_get_strength(VALUE self){
 	return Qnil;
 }
 
+/* Returns the mode the rig is set to.
+ *
+ *   rig.rig_get_mode    #=> "AM"
+ */
 static VALUE rb_rig_get_mode(VALUE self){
 	int ret;
 	rmode_t mode;
@@ -164,6 +194,11 @@ static VALUE rb_rig_get_mode(VALUE self){
 	return Qnil;
 }
 
+/* Set the mode of the rig.  The second argument can be either,
+ * "normal", "wide", or "narrow".
+ *
+ *   rig.rig_set_mode("FM", "normal")    #=> nil
+ */    
 static VALUE rb_rig_set_mode(VALUE self, VALUE rmode, VALUE rwidth){
 	int ret;
 	rmode_t mode;
@@ -192,6 +227,7 @@ static VALUE rb_rig_set_mode(VALUE self, VALUE rmode, VALUE rwidth){
         return Qnil;
 }	
 
+/* This is where all of the methods are registered */
 void Init_rham() {
 	rb_cRham = rb_define_class("Rham", rb_cObject);
 	rb_define_alloc_func(rb_cRham, rig_allocate);

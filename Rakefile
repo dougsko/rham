@@ -37,6 +37,7 @@ task :spec => :check_dependencies
 task :default => :spec
 
 require 'rake/rdoctask'
+require 'darkfish-rdoc'
 Rake::RDocTask.new do |rdoc|
   if File.exist?('VERSION')
     version = File.read('VERSION')
@@ -47,5 +48,10 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "rham #{version}"
   rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb, ext/**/*.c')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+  rdoc.rdoc_files.include('ext/**/*.c')
+  rdoc.options += [
+      '-N',
+      '-f', 'darkfish'
+  ]
 end
